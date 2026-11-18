@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How much AI should I use? A guide for environmental majors</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Encode+Sans:wght@600;800;900&family=Open+Sans:ital,wght@0,400;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --purple:#4B2E83; --purple-dark:#32205A; --gold:#E8D3A2; --gold-text:#7A6534;
+    --tint:#F1EDF7; --ink:#2E2640; --line:#D9D0EA; --white:#FFFFFF; --red:#C8102E;
+    --l0:#4B2E83; --l1:#2F6F9F; --l2:#7A6534; --l3:#5E5870;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:'Open Sans',Arial,sans-serif;color:var(--ink);background:var(--white);line-height:1.5;font-size:17px}
+  a{color:var(--purple)}
+  header{background:var(--purple);color:var(--white);padding:40px 24px 32px}
+  .wrap{max-width:980px;margin:0 auto;padding:0 24px}
+  header .wrap{padding:0}
+  h1,h2,h3{font-family:'Encode Sans',Arial,sans-serif;line-height:1.15;margin:0}
+  h1{font-size:clamp(28px,4vw,42px);font-weight:900}
+  .bar{width:120px;height:8px;background:var(--gold);margin:14px 0 18px}
+  header p{margin:0;max-width:720px;font-size:18px;color:#EDE7F6}
+  .rule{margin-top:22px;background:var(--purple-dark);border-left:6px solid var(--gold);padding:14px 18px;max-width:760px}
+  .rule strong{color:var(--gold)}
+  main{padding:40px 0 56px}
+  section{margin-bottom:36px}
+  h2{font-size:26px;font-weight:900;color:var(--purple);margin-bottom:6px}
+  .sub{color:#5E5870;margin:0 0 16px}
+
+  /* levels legend */
+  .levels{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+  .lvl{border-radius:12px;padding:14px 14px 12px;background:var(--tint);border-top:6px solid var(--c)}
+  .lvl h3{font-size:18px;font-weight:800;color:var(--c)}
+  .lvl p{margin:6px 0 0;font-size:15px}
+  .num{display:inline-block;font-family:'Encode Sans',Arial,sans-serif;font-weight:900;font-size:13px;letter-spacing:1px;color:var(--white);background:var(--c);border-radius:999px;padding:2px 10px;margin-bottom:6px}
+
+  /* form */
+  .form{background:var(--tint);border-radius:16px;padding:24px}
+  fieldset{border:0;padding:0;margin:0 0 22px}
+  legend{font-family:'Encode Sans',Arial,sans-serif;font-weight:800;font-size:19px;color:var(--purple);margin-bottom:10px;padding:0}
+  .step{display:inline-block;background:var(--purple);color:var(--white);font-size:13px;border-radius:999px;padding:1px 9px;margin-right:8px;vertical-align:2px}
+  .opts{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px}
+  .opt{position:relative}
+  .opt input{position:absolute;opacity:0;width:1px;height:1px}
+  .opt label{display:block;height:100%;background:var(--white);border:2px solid var(--line);border-radius:12px;padding:12px 14px;cursor:pointer}
+  .opt label b{display:block;color:var(--purple);font-weight:700}
+  .opt label span{display:block;font-size:14px;color:#5E5870;margin-top:2px}
+  .opt input:checked + label{border-color:var(--purple);box-shadow:inset 0 0 0 2px var(--purple);background:#FBFAFE}
+  .opt input:focus-visible + label{outline:3px solid var(--gold);outline-offset:2px}
+  .opts.three{grid-template-columns:repeat(3,1fr)}
+  .opts.two{grid-template-columns:repeat(2,1fr)}
+  .hint{font-size:14px;color:#5E5870;margin:8px 0 0}
+  button.go{font-family:'Encode Sans',Arial,sans-serif;font-weight:800;font-size:18px;background:var(--purple);color:var(--white);border:0;border-radius:999px;padding:12px 28px;cursor:pointer}
+  button.go:hover{background:var(--purple-dark)}
+  button.go:focus-visible{outline:3px solid var(--gold);outline-offset:3px}
+  .err{color:var(--red);font-weight:600;margin:12px 0 0;min-height:1.5em}
+
+  /* results */
+  #result:empty{display:none}
+  .goal{background:var(--purple);color:var(--white);border-radius:16px;padding:20px 22px;margin-bottom:18px}
+  .goal h3{font-size:22px;font-weight:900}
+  .goal p{margin:6px 0 0;color:#EDE7F6}
+  .goal .tag{display:inline-block;background:var(--gold);color:var(--purple);font-weight:700;font-size:13px;letter-spacing:1px;text-transform:uppercase;border-radius:999px;padding:2px 10px;margin-top:10px}
+  .task{border:2px solid var(--line);border-left:10px solid var(--c);border-radius:14px;padding:18px 20px;margin-bottom:14px;background:var(--white)}
+  .task-head{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+  .task h4{font-family:'Encode Sans',Arial,sans-serif;font-size:20px;font-weight:800;color:var(--ink);margin:0}
+  .badge{font-family:'Encode Sans',Arial,sans-serif;font-weight:800;font-size:15px;color:var(--white);background:var(--c);border-radius:999px;padding:4px 14px;white-space:nowrap}
+  .why{margin:8px 0 10px}
+  .capped{font-size:14px;color:var(--red);font-weight:600;margin:-4px 0 10px}
+  .prompt{background:var(--tint);border-radius:10px;padding:12px 14px;display:flex;gap:12px;align-items:flex-start}
+  .prompt q{flex:1;font-style:italic;quotes:"\201C" "\201D"}
+  .copy{font-size:13px;font-weight:700;background:var(--white);color:var(--purple);border:2px solid var(--purple);border-radius:999px;padding:4px 12px;cursor:pointer;white-space:nowrap}
+  .copy:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+  .check{margin:10px 0 0;font-size:15px}
+  .check b{color:var(--purple)}
+  .privacy{border-top:1px dashed var(--line);padding-top:8px}
+  footer a{color:var(--purple)}
+  .opt input[type=checkbox]:checked + label{border-color:var(--purple);box-shadow:inset 0 0 0 2px var(--purple);background:#FBFAFE}
+  .tryfirst{background:var(--purple);color:var(--white);border-radius:16px;padding:20px 22px;margin-bottom:18px;display:flex;gap:18px;align-items:flex-start}
+  .tryfirst .clock{flex:0 0 52px;height:52px;border-radius:50%;background:var(--gold);color:var(--purple);font-family:'Encode Sans',Arial,sans-serif;font-weight:900;font-size:20px;line-height:52px;text-align:center}
+  .tryfirst h3{font-size:22px;font-weight:900;color:var(--gold)}
+  .tryfirst p{margin:6px 0 0;color:#EDE7F6}
+  .later{font-size:14px;font-weight:700;color:var(--l1);margin:0 0 8px}
+  .closing{border-left:8px solid var(--red);padding:12px 18px;margin-top:22px}
+  .closing h3{color:var(--red);font-size:18px;letter-spacing:1px;text-transform:uppercase}
+  .closing p{margin:6px 0 0}
+  .note{font-size:14px;color:#5E5870}
+  .policy{display:flex;gap:20px;align-items:flex-start;background:#FFF6F7;border:3px solid var(--red);border-radius:16px;padding:22px 24px;margin:32px 0 36px}
+  .policy-icon{flex:0 0 52px;width:52px;height:52px;border-radius:50%;background:var(--red);color:var(--white);font-family:'Encode Sans',Arial,sans-serif;font-weight:900;font-size:32px;line-height:52px;text-align:center}
+  .policy h2{color:var(--red);font-size:24px;margin-bottom:6px}
+  .policy p{margin:0;font-size:18px}
+  @media print{.policy{border-width:2px}}
+  footer{border-top:1px solid var(--line);padding:20px 0 40px;font-size:14px;color:#5E5870}
+  .sr{position:absolute;left:-9999px}
+  @media (max-width:760px){.levels,.opts.three,.opts.two{grid-template-columns:1fr}}
+  @media print{
+    header{background:none;color:var(--ink);padding:0} header p{color:var(--ink)} .rule{background:none;color:var(--ink)}
+    .form,.copy,button{display:none} .task{break-inside:avoid}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <h1>How much AI should I use?</h1>
+    <div class="bar" aria-hidden="true"></div>
+    <p>A guide for environmental majors. Pick the kind of assessment and how well you know the skill. You’ll get a recommendation for each part of the task, not just the assignment as a whole.</p>
+    <p class="rule"><strong>The rule of thumb:</strong> use AI for what you’ve already learned to do, not for what you’re there to learn.</p>
+  </div>
+</header>
+
+<main class="wrap">
+  <aside class="policy" aria-labelledby="pol-h">
+    <div class="policy-icon" aria-hidden="true">!</div>
+    <div>
+      <h2 id="pol-h">Check your course policy first</h2>
+      <p>Your instructor’s AI policy always comes first. This guide helps you decide how much AI to use <em>within</em> what your course allows. <b>If the syllabus says no AI, the answer is no AI.</b> Not sure what’s allowed? Ask your instructor before you start. <b>If you do use AI, follow your course’s rules for acknowledging it.</b> If AI is part of a disability accommodation, your accommodation plan comes first.</p>
+    </div>
+  </aside>
+  <section aria-labelledby="lv-h">
+    <h2 id="lv-h">Four levels of AI use</h2>
+    <p class="sub">From most to least of your own thinking.</p>
+    <div class="levels">
+      <div class="lvl" style="--c:var(--l0)"><span class="num">LEVEL 0</span><h3>No AI</h3><p>Your brain only. This is the learning itself.</p></div>
+      <div class="lvl" style="--c:var(--l1)"><span class="num">LEVEL 1</span><h3>AI Coach</h3><p>AI <em>adds</em> productive struggle: hints, questions, quizzes, critique. It never hands you the answer. A TA, librarian or classmate can coach you too.</p></div>
+      <div class="lvl" style="--c:var(--l2)"><span class="num">LEVEL 2</span><h3>AI Assist</h3><p>AI <em>removes</em> extraneous load: plain-language explanations, debugging help, reformatting. You still do the thinking.</p></div>
+      <div class="lvl" style="--c:var(--l3)"><span class="num">LEVEL 3</span><h3>AI Offload</h3><p>AI does the step and you check it. Only for steps that aren’t the learning goal, and only if you could spot an error.</p></div>
+    </div>
+  </section>
+
+  <section aria-labelledby="f-h">
+    <h2 id="f-h">Check your task</h2>
+    <p class="sub">Five quick questions.</p>
+    <div id="f" class="form" role="group" aria-label="Check your task">
+      <fieldset>
+        <legend><span class="step">1</span>What kind of assessment is it?</legend>
+        <div class="opts" id="assess"></div>
+      </fieldset>
+      <fieldset>
+        <legend><span class="step">2</span>When did you last do this kind of work <em>without AI</em> and check it was right?</legend>
+        <div class="opts three" id="mastery"></div>
+        <p class="hint">Not “how confident do you feel?” Confidence is exactly what AI inflates. Answer with what you’ve actually done.</p>
+      </fieldset>
+      <fieldset>
+        <legend><span class="step">3</span>Which of these are learning goals in your syllabus? <span class="hint" style="font-weight:400">(tick any)</span></legend>
+        <div class="opts" id="goals"></div>
+        <p class="hint">If the course is teaching a skill, you don’t hand that skill to AI. Not sure? Check the syllabus learning outcomes.</p>
+      </fieldset>
+      <fieldset>
+        <legend><span class="step">4</span>If AI got something wrong in this task, would you notice?</legend>
+        <div class="opts two" id="verify"></div>
+      </fieldset>
+      <fieldset>
+        <legend><span class="step">5</span>How long have you already worked on this on your own?</legend>
+        <div class="opts three" id="time"></div>
+      </fieldset>
+      <button type="button" class="go" id="go">Show my recommendation</button>
+      <p class="err" id="err" role="alert"></p>
+    </div>
+  </section>
+
+  <section id="result" aria-live="polite" tabindex="-1"></section>
+
+</main>
+
+<footer>
+  <div class="wrap">C ENV 200 · A Student’s Guide to Responsible Use of AI · University of Washington. Built on ideas from cognitive load theory and the class discussion of the illusion of competence. Aligned with UW’s guidance: <a href="https://www.ai.uw.edu/uws-vice-provost-for-ai-shares-what-every-uw-student-should-know-about-ai/" target="_blank" rel="noopener">What every UW student should know about AI</a> · <a href="https://it.uw.edu/guides/artificial-intelligence/purple" target="_blank" rel="noopener">Purple, UW’s AI tool</a>.</div>
+</footer>
+
+<script>
+const PURPLE = "https://it.uw.edu/guides/artificial-intelligence/purple";
+const LEVELS = [
+  {name:"No AI", c:"var(--l0)"},
+  {name:"AI Coach", c:"var(--l1)"},
+  {name:"AI Assist", c:"var(--l2)"},
+  {name:"AI Offload", c:"var(--l3)"}
+];
+// Level for each task type by evidence of mastery: [never, only with help, recently on my own and correct]
+const RULES = {
+  own:        [0,0,0], // only you can do it: your observations, experiences, decisions
+  core:       [0,1,1], // the thing this assessment exists to build
+  learn:      [1,1,1], // understanding something: AI as tutor or quiz partner
+  support:    [1,2,3], // a skill you use along the way, not the one being assessed
+  mechanical: [2,2,3]  // formatting, layout, conventions (offload only with evidence)
+};
+const NEEDS_STRUGGLE = {core:true, learn:true, support:true};
+const WHY = {
+  own:        ["Only you have this. AI can only invent it.","Only you have this. AI can only invent it.","Only you have this. AI can only invent it."],
+  core:       ["This is the skill the assessment is building, and you haven’t done it on your own yet. Do it yourself. Stuck after a real attempt? Ask for one hint at Coach level.","This is the skill being built. Do the work yourself; use AI only to push back on it.","Still the skill being assessed. Fluency is the goal, so keep doing the work and let AI test you."],
+  learn:      ["Use AI as a tutor, not an answer key. It should make you think harder, not less.","Use AI as a tutor, not an answer key. It should make you think harder, not less.","Use AI as a tutor, not an answer key. It should make you think harder, not less."],
+  support:    ["You’ll need this skill later, so learn it while you use it. Ask AI to teach, not to do.","You can do it with help. Let AI clear obstacles, but you still do the work.","You’ve shown you can do this, and it isn’t what’s being assessed. You’ve earned the offload, as long as you check it."],
+  mechanical: ["Not the learning goal. Let AI help, and learn the conventions as you go.","Not the learning goal. Let AI help, and learn the conventions as you go.","Not the learning goal, and you’ve shown you can do it. Hand it off and spot-check."]
+};
+const PROMPT = [
+  "Don’t use AI for this step. Write or work it out yourself first.",
+  "Don’t give me the answer. Here’s my attempt: [paste]. Ask me one question that helps me find my own next step.",
+  "Explain [term or error] in plain language with one example. Don’t do the task for me.",
+  "Do [this step] for me, then list anything you weren’t sure about so I can check it."
+];
+const CHECK = [
+  "Verification of learning: could you explain this to a classmate with the page closed?",
+  "Verification of learning: close the chat and do one more like it on your own.",
+  "Verification: re-explain the AI’s help in your own words before you use it.",
+  "Verification: spot-check every item. Any error means you check the lot."
+];
+
+const A = [
+ {id:"pset", name:"Problem set", eg:"Calculus, stats, chemistry", goal:"Procedural fluency and transfer: solving problems you haven’t seen before.", bloom:"Apply", tasks:[
+   {t:"Setting up the problem", k:"core"},
+   {t:"Working the steps", k:"core"},
+   {t:"Understanding a concept you’re stuck on", k:"learn", p:"I’m stuck on [concept]. Don’t solve my problem. Give me a simpler example and ask me to try it first."},
+   {t:"Checking your arithmetic and units", k:"support", p:"Here’s my finished working: [paste]. Check the arithmetic and units only. Don’t rework the method."}]},
+ {id:"lab", name:"Lab report", eg:"Field or lab data write-up", goal:"Analysis and interpretation: what your data mean and why.", bloom:"Analyze", tasks:[
+   {t:"Interpreting results (discussion)", k:"core", pc:"Here’s my discussion section: [paste]. What’s the weakest claim, and what evidence would a reviewer ask for? Don’t rewrite it."},
+   {t:"Describing your methods", k:"own"},
+   {t:"Data analysis code and plots", k:"support", skill:"code", p:"My R code gives this error: [paste]. Explain what’s wrong and why. Don’t rewrite the whole script."},
+   {t:"Formatting and citations", k:"mechanical", skill:"cite", p:"Format these references in APA 7. Don’t add or change any sources: [paste]."}]},
+ {id:"field", name:"Field notebook", eg:"Observations, sketches, site notes", goal:"Observation: training yourself to notice.", bloom:"Remember / Understand", tasks:[
+   {t:"Observations and sketches", k:"own"},
+   {t:"Identifying species or features", k:"core", pc:"I think this is [species] because [features]. Quiz me on how to tell it apart from look-alikes."},
+   {t:"Tidying notes into a write-up", k:"support", skill:"writing", p:"Turn these field notes into a table by date and site. Don’t add anything I didn’t record: [paste]."}]},
+ {id:"data", name:"Data project", eg:"R, Python or GIS analysis", goal:"An analysis workflow you can explain and reproduce.", bloom:"Apply / Analyze", tasks:[
+   {t:"Choosing the question and the analysis", k:"core", pc:"I plan to test [question] with [method]. What assumptions does that method make, and which might my data break?"},
+   {t:"Writing code", k:"support", skill:"code", p:"Explain how to [task] in R with a tiny example on made-up data. I’ll adapt it to mine."},
+   {t:"Debugging", k:"support", skill:"code", p:"My code gives this error: [paste]. Explain the cause. Don’t rewrite it."},
+   {t:"Interpreting the output", k:"core", pc:"Here’s my interpretation of this output: [paste]. Ask me two questions that test whether it holds up."},
+   {t:"Styling maps and plots", k:"mechanical", skill:"viz", p:"Make this ggplot colorblind-friendly with readable labels. Don’t change the data or the geoms: [paste]."}]},
+ {id:"lit", name:"Literature review", eg:"Annotated bibliography, background", goal:"Synthesis: seeing how sources connect, agree and conflict.", bloom:"Analyze / Evaluate", tasks:[
+   {t:"Finding sources", k:"support", skill:"cite", verifyAlways:true, p:"Suggest search terms and databases for [topic]. Don’t list papers; I’ll find them myself.", note:"AI invents citations. Every source must be one you’ve opened yourself."},
+   {t:"Reading the papers", k:"core", pc:"I read [paper]. Here’s my summary: [paste]. What did I miss or get wrong? Ask me before telling me."},
+   {t:"Synthesizing the themes", k:"core", pc:"Here are my themes across these sources: [paste]. Where am I lumping together things that actually disagree?"},
+   {t:"Citation formatting", k:"mechanical", skill:"cite", p:"Format these references in APA 7. Don’t add or change any sources: [paste]."}]},
+ {id:"essay", name:"Essay or policy brief", eg:"Argument, op-ed, recommendation", goal:"Argument: taking a position and weighing evidence for it.", bloom:"Evaluate / Create", tasks:[
+   {t:"Your position and argument", k:"core", pc:"Here’s my argument: [paste]. Make the strongest case against it. Don’t suggest a new position."},
+   {t:"Stress-testing against counterarguments", k:"learn", p:"Argue against my position as a [stakeholder] would. Then ask how I’d respond."},
+   {t:"Gathering evidence", k:"support", verifyAlways:true, p:"What kinds of evidence would support or undercut [claim]? Don’t give me sources; tell me where to look.", note:"Check every fact and figure against an original source."},
+   {t:"Polishing language", k:"mechanical", skill:"writing",  p:"Point out unclear sentences in this paragraph and say why. Don’t rewrite it: [paste]."}]},
+ {id:"reflect", name:"Reflection or discussion post", eg:"Reading response, journal", goal:"Metacognition: making sense of your own thinking and experience.", bloom:"Evaluate", tasks:[
+   {t:"Your reflection", k:"own"},
+   {t:"Understanding the reading you’re responding to", k:"learn", p:"I read [text]. Here’s what I think the main argument is: [paste]. Ask me questions to test it."}]},
+ {id:"exam", name:"Studying for an exam", eg:"Closed-book test, quiz", goal:"Retrieval: getting it out of your head without notes.", bloom:"Remember / Apply", tasks:[
+   {t:"Practicing retrieval", k:"learn", p:"Quiz me on [topic], one question at a time. Wait for my answer before giving feedback. Make them harder if I get three right."},
+   {t:"Making your study guide or flashcards", k:"core", pc:"Here are my flashcards: [paste]. Which important ideas from [topic] are missing? Don’t write the cards for me.", note:"Making the guide is the studying. An AI-made guide feels useful and skips the work."},
+   {t:"Explaining what you got wrong", k:"learn", p:"I got this wrong: [question and my answer]. Help me see where my reasoning broke, with a question first."}]},
+ {id:"group", name:"Group project", eg:"Presentation, poster, report", goal:"Collaboration and communication.", bloom:"Create", tasks:[
+   {t:"Group decisions and dividing the work", k:"own"},
+   {t:"Your section’s content", k:"core", pc:"Here’s my section: [paste]. What would a skeptical audience member ask? Don’t answer for me."},
+   {t:"Rehearsing", k:"learn", p:"I’m presenting [topic]. Ask me five tough audience questions, one at a time, and react to my answers."},
+   {t:"Slide design and layout", k:"mechanical", skill:"viz", p:"Suggest a cleaner layout for this slide with the same content: [paste]."}]},
+ {id:"cap", name:"Capstone or research proposal", eg:"Senior project, thesis", goal:"Independent research: framing and answering a real question.", bloom:"Create", tasks:[
+   {t:"Your research question", k:"core", pc:"My research question is [question]. Is it answerable with [data and time]? Ask me what I’d do if [assumption] fails."},
+   {t:"Literature and methods", k:"core", pc:"Here’s my methods plan: [paste]. What would a reviewer see as the biggest threat to validity?"},
+   {t:"Code and analysis", k:"support", skill:"code", p:"Explain the cause of this error in my analysis: [paste]. Don’t rewrite it."},
+   {t:"Editing and formatting", k:"mechanical", skill:"writing", p:"Check this section against [style guide] formatting. List the issues; don’t rewrite the content."}]}
+];
+const M = [
+  {id:0, name:"Never", eg:"I haven’t done this without AI"},
+  {id:1, name:"Only with help", eg:"From notes, examples, a tutor or AI"},
+  {id:2, name:"Recently, and it was right", eg:"On my own, and I checked it"}
+];
+const V = [
+  {id:"yes", name:"Yes, I’d catch it", eg:"I know this well enough to spot errors"},
+  {id:"no", name:"No, or not sure", eg:"I’d probably trust what it said"}
+];
+const G = [
+  {id:"code", name:"Coding", eg:"R, Python, GIS scripting"},
+  {id:"writing", name:"Writing", eg:"Clarity, style, structure"},
+  {id:"viz", name:"Visual communication", eg:"Figures, maps, slides"},
+  {id:"cite", name:"Research skills", eg:"Finding and citing sources"}
+];
+const T = [
+  {id:"0", name:"Haven’t started", eg:"Opening it for the first time"},
+  {id:"5", name:"Less than 10 minutes", eg:"I’ve had a quick go"},
+  {id:"10", name:"10 minutes or more", eg:"A real attempt, and I’m stuck"}
+];
+
+function opt(group, o, type){
+  const id = group + "-" + o.id;
+  return `<div class="opt"><input type="${type||"radio"}" name="${group}" id="${id}" value="${o.id}"><label for="${id}"><b>${o.name}</b><span>${o.eg}</span></label></div>`;
+}
+document.getElementById("assess").innerHTML = A.map(a=>opt("a",a)).join("");
+document.getElementById("mastery").innerHTML = M.map(m=>opt("m",m)).join("");
+document.getElementById("verify").innerHTML = V.map(v=>opt("v",v)).join("");
+document.getElementById("goals").innerHTML = G.map(g=>opt("g",g,"checkbox")).join("");
+document.getElementById("time").innerHTML = T.map(t=>opt("t",t)).join("");
+
+function esc(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");}
+
+function render(a, m, v, goals, time){
+  const early = time!=="10";
+  const out = [];
+  out.push(`<div class="goal"><h3>${a.name}: what it’s building</h3><p>${a.goal}</p><span class="tag">Bloom’s level: ${a.bloom}</span></div>`);
+  if (early){
+    out.push(`<div class="tryfirst"><div class="clock" aria-hidden="true">10</div><div><h3>Try first</h3><p>${time==="0"?"You haven’t started yet.":"You’ve worked on this for less than 10 minutes."} Set a 10-minute timer and work on it alone. Write down exactly where you get stuck. Then come back: the levels marked “after 10 minutes” open up, and AI can help at that exact point. Formatting and layout don’t need the wait.</p></div></div>`);
+  }
+  a.tasks.forEach((t,i)=>{
+    let k = t.k;
+    let goalNote = "";
+    if (t.skill && goals.includes(t.skill) && (k==="support"||k==="mechanical")){ k="core"; goalNote="Your syllabus lists this skill as a learning goal, so it’s treated as the core of the task."; }
+    let lvl = RULES[k][m];
+    let capped = "";
+    if ((v==="no" || t.verifyAlways) && lvl===3){
+      lvl = 2;
+      capped = t.verifyAlways ? "Capped at Assist: AI makes up sources, so you can’t offload this." : "Capped at Assist: you said you might not catch an AI error, so don’t hand this off.";
+    }
+    let later = null;
+    if (early && NEEDS_STRUGGLE[k] && lvl>0){ later = lvl; lvl = 0; }
+    const L = LEVELS[lvl];
+    let why = later!==null ? "Not yet. This step needs your own attempt before AI comes in." : (capped ? "Not the learning goal, so AI can help here. Work alongside it rather than handing the step off." : WHY[k][m]);
+    const pl = later!==null ? later : lvl;
+    let prompt = PROMPT[pl];
+    if (pl===1 && t.pc) prompt = t.pc;
+    else if (pl===3) prompt = (k==="mechanical" && t.p) ? t.p : PROMPT[3];
+    else if (pl>=1 && t.p && k!=="core") prompt = t.p;
+    if (k==="core" && pl===1 && !t.pc) prompt = PROMPT[1];
+    const extras = [];
+    if (goalNote) extras.push(`<p class="check"><b>Learning goal:</b> ${goalNote}</p>`);
+    if (t.note) extras.push(`<p class="check"><b>Note:</b> ${t.note}</p>`);
+    if (pl===1){
+      if (k==="core" && prompt.includes("[paste]")) extras.push(`<p class="check"><b>One round only:</b> one round of AI feedback per draft. Then revise on your own.</p>`);
+      if (v==="no") extras.push(`<p class="check"><b>Check its answers:</b> you said you might not catch errors, so check what it tells you against your notes or textbook.</p>`);
+      extras.push(`<p class="check"><b>Prefer a person?</b> A TA, librarian, the writing center or a classmate can coach you the same way.</p>`);
+    }
+    const promptBlock = pl>0
+      ? `${later!==null?`<p class="later">After 10 minutes of your own work: Level ${later}, ${LEVELS[later].name}</p>`:""}<div class="prompt"><q id="p${i}">${esc(prompt)}</q><button type="button" class="copy" data-t="p${i}" aria-label="Copy prompt for ${esc(t.t)}">Copy</button></div>`
+      : `<div class="prompt"><span>${PROMPT[0]}</span></div>`;
+    const privacy = pl>0 && prompt.includes("[paste]") ? `<p class="check privacy"><b>Before you paste:</b> is it yours to share? Use <a href="${PURPLE}" target="_blank" rel="noopener">Purple</a>, UW’s AI tool, which keeps your data inside UW. If it’s from someone else’s research project, follow that project’s AI rules.</p>` : "";
+    out.push(`<article class="task" style="--c:${L.c}">
+      <div class="task-head"><h4>${t.t}</h4><span class="badge">${later!==null?"Now: ":""}Level ${lvl}: ${later!==null?"Try first":L.name}</span></div>
+      <p class="why">${why}</p>
+      ${capped?`<p class="capped">${capped}</p>`:""}
+      ${promptBlock}
+      ${extras.join("")}
+      ${privacy}
+      <p class="check"><b>${CHECK[pl].split(":")[0]}:</b>${CHECK[pl].slice(CHECK[pl].indexOf(":")+1)}</p>
+    </article>`);
+  });
+  out.push(`<div class="closing"><h3>Verification of learning</h3><p>Whatever level you used, finish the same way: close the chat and do one piece of it on your own. If you can’t, the AI did the learning, not you.</p><p><b>Watch the clock.</b> If AI cut your time on this by half or more, check your learning. In a study of 27,000 students, the exam penalty fell mostly on those whose homework time dropped.</p></div>`);
+  const sub = [a.name, M[m].name==="Never"?"Never done it without AI":M[m].name==="Only with help"?"Only with help":"Done it recently on my own", v==="no"?"Might not catch errors":"", T.find(x=>x.id===time).name].filter(Boolean).join(" · ");
+  return `<h2>Your recommendation</h2><p class="sub">${sub}</p>` + out.join("");
+}
+
+function val(name){ const el=document.querySelector('input[name="'+name+'"]:checked'); return el?el.value:null; }
+function show(){
+  const err = document.getElementById("err");
+  try{
+    const a = A.find(x=>x.id===val("a")), m = val("m"), v = val("v"), time = val("t");
+    const goals = Array.from(document.querySelectorAll('input[name="g"]:checked')).map(x=>x.value);
+    const missing = [!a&&"the assessment type", m===null&&"when you last did this without AI", !v&&"whether you’d catch errors", !time&&"how long you’ve worked on it"].filter(Boolean);
+    if (missing.length){ err.textContent = "Please choose " + missing.join(", ") + "."; return; }
+    err.textContent = "";
+    const r = document.getElementById("result");
+    r.innerHTML = render(a, Number(m), v, goals, time);
+    try{ r.focus({preventScroll:true}); r.scrollIntoView({behavior:"smooth", block:"start"}); }catch(_){}
+  }catch(ex){ err.textContent = "Something went wrong: " + ex.message; }
+}
+document.getElementById("go").addEventListener("click", show);
+
+document.addEventListener("click", e=>{
+  const b = e.target.closest(".copy"); if(!b) return;
+  const text = document.getElementById(b.dataset.t).textContent;
+  const done = ()=>{ b.textContent="Copied"; setTimeout(()=>b.textContent="Copy",1500); };
+  try {
+    navigator.clipboard.writeText(text).then(done, ()=>fallback(text, done));
+  } catch(_) { fallback(text, done); }
+});
+function fallback(text, done){
+  try{
+    const t=document.createElement("textarea"); t.value=text; t.setAttribute("readonly",""); t.className="sr";
+    document.body.appendChild(t); t.select(); document.execCommand("copy"); t.remove(); done();
+  }catch(_){}
+}
+</script>
+</body>
+</html>
